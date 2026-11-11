@@ -1,0 +1,551 @@
+{
+  "info": {
+    "_postman_id": "a9183421-4f10-4ecb-9d62-assetmanagement",
+    "name": "AssetManagement API",
+    "description": "Colección completa para pruebas del sistema de Gestión de Activos Empresariales con Arquitectura Hexagonal y JWT.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticación",
+      "item": [
+        {
+          "name": "Login Administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.results && res.results.token) {",
+                  "    pm.environment.set(\"token\", res.results.token);",
+                  "    pm.collectionVariables.set(\"token\", res.results.token);",
+                  "    console.log(\"Token JWT guardado exitosamente\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login Operador (Rol USER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.results && res.results.token) {",
+                  "    pm.collectionVariables.set(\"token_operador\", res.results.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"operador\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Departamentos",
+      "item": [
+        {
+          "name": "Listar Departamentos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/departamentos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "departamentos"]
+            }
+          }
+        },
+        {
+          "name": "Registrar Departamento",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"DES-01\",\n  \"nombre\": \"Investigacion y Desarrollo\",\n  \"edificio\": \"Torre Norte\",\n  \"piso\": \"Piso 4\",\n  \"presupuestoMaximo\": 45000.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/departamentos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "departamentos"]
+            }
+          }
+        },
+        {
+          "name": "Consultar Departamento por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/departamentos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "departamentos", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Categorías",
+      "item": [
+        {
+          "name": "Listar Categorias",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categorias",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categorias"]
+            }
+          }
+        },
+        {
+          "name": "Registrar Categoria",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"AUD-01\",\n  \"nombre\": \"Equipos Audiovisuales\",\n  \"descripcion\": \"Proyectores laser y salas de conferencia\",\n  \"vidaUtilAnios\": 4,\n  \"tasaDepreciacionAnual\": 25.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/categorias",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "categorias"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Activos",
+      "item": [
+        {
+          "name": "Listar Inventario de Activos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/activos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "activos"]
+            }
+          }
+        },
+        {
+          "name": "Registrar Activo (USD)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigoInventario\": \"ACT-COMP-003\",\n  \"nombre\": \"Lenovo ThinkPad X1 Carbon Gen 11\",\n  \"marca\": \"Lenovo\",\n  \"modelo\": \"X1 Carbon Gen 11\",\n  \"numeroSerie\": \"SN-LNV-2026-X1C\",\n  \"costoAdquisicion\": 1850.00,\n  \"moneda\": \"USD\",\n  \"fechaAdquisicion\": \"2026-03-01\",\n  \"finGarantia\": \"2029-03-01\",\n  \"categoriaId\": 1,\n  \"departamentoId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/activos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "activos"]
+            }
+          }
+        },
+        {
+          "name": "Registrar Activo con Multidivisa (EUR a USD)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigoInventario\": \"ACT-SERV-002\",\n  \"nombre\": \"Switch Cisco Catalyst 9300\",\n  \"marca\": \"Cisco\",\n  \"modelo\": \"Catalyst 9300\",\n  \"numeroSerie\": \"SN-CSCO-9300-EU\",\n  \"costoAdquisicion\": 1500.00,\n  \"moneda\": \"EUR\",\n  \"fechaAdquisicion\": \"2026-03-02\",\n  \"finGarantia\": \"2031-03-02\",\n  \"categoriaId\": 2,\n  \"departamentoId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/activos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "activos"]
+            }
+          }
+        },
+        {
+          "name": "Consultar Activo por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/activos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "activos", "1"]
+            }
+          }
+        },
+        {
+          "name": "Cambiar Estado (Mantenimiento)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"EN_MANTENIMIENTO\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/activos/2/estado",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "activos", "2", "estado"]
+            }
+          }
+        },
+        {
+          "name": "Validación Regla: Cupo Excedido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigoInventario\": \"ACT-SUPER-001\",\n  \"nombre\": \"Supercomputador DGX\",\n  \"marca\": \"Nvidia\",\n  \"modelo\": \"DGX H100\",\n  \"numeroSerie\": \"SN-NV-DGX-9999\",\n  \"costoAdquisicion\": 100000.00,\n  \"moneda\": \"USD\",\n  \"fechaAdquisicion\": \"2026-03-01\",\n  \"categoriaId\": 2,\n  \"departamentoId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/activos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "activos"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Asignaciones y Custodia",
+      "item": [
+        {
+          "name": "Asignar Activo a Custodio",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activoId\": 2,\n  \"usuarioId\": 3,\n  \"fechaAsignacion\": \"2026-03-05\",\n  \"observaciones\": \"Entrega de portatil para proyectos de software.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/asignaciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "asignaciones"]
+            }
+          }
+        },
+        {
+          "name": "Devolver Activo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fechaDevolucion\": \"2026-03-10\",\n  \"observaciones\": \"Equipo retornado en perfecto estado fisico y funcional.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/asignaciones/1/devolver",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "asignaciones", "1", "devolver"]
+            }
+          }
+        },
+        {
+          "name": "Listar Historial de Asignaciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/asignaciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "asignaciones"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Usuarios",
+      "item": [
+        {
+          "name": "Listar Usuarios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Registrar Usuario",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"carlos.mendoza\",\n  \"password\": \"admin123\",\n  \"rol\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "usuarios"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
